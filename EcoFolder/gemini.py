@@ -1,6 +1,14 @@
-# Aqui se implementa el Chat Financiero Inteligente usando Gemini
-
+import os
+from dotenv import load_dotenv
+import google.generativeai as genai
 import streamlit as st
+import pandas as pd
+
+# Cargar API Key
+load_dotenv()
+API_KEY = os.getenv("GEMINI_API_KEY")
+genai.configure(api_key=API_KEY)
+model = genai.GenerativeModel("gemini-2.5-flash")
 
 def asistente_financiero(df, analisis):
     st.header("Asistente financiero inteligente")
@@ -11,48 +19,19 @@ def asistente_financiero(df, analisis):
             st.warning("Escribe una pregunta primero.")
             return
 
-        p = pregunta.lower()
-        sugerencia = "Analizar finanzas generales"
-        confianza = 75
+        # Construir prompt
+        prompt = "Resumen financiero:\n"
+        for col in df.columns:
+            prompt += f"{col}: {df[col].to_dict()}\n"
+        for k, v in analisis.items():
+            prompt += f"{k}: {v}\n"
+        prompt += f"\nPregunta del usuario: {pregunta}\n"
+        prompt += "Responde como un asistente financiero claro y con recomendaciones accionables."
 
-        if any(w in p for w in ["ingreso", "ganar", "aumentar", "mejorar"]):
-            sugerencia = "Aumentar ingresos"
-            confianza = 85
-        elif any(w in p for w in ["gasto", "reducir", "bajar", "ahorrar"]):
-            sugerencia = "Reducir gastos"
-            confianza = 90
-        elif any(w in p for w in ["invertir", "inversión", "rendimiento"]):
-            sugerencia = "Invertir inteligentemente"
-            confianza = 82
-        elif any(w in p for w in ["flujo", "efectivo", "liquidez"]):
-            sugerencia = "Optimizar flujo de efectivo"
-            confianza = 80
-
-        st.success(f"Sugerencia: {sugerencia}")
-        st.caption(f"Confianza: {confianza}%")
-
-        ahorro = analisis["ahorro"]
-        ingresos = analisis["ingresos"]
-        gastos = analisis["gastos"]
-        flujo = analisis["flujo"]
-
-        if ahorro < 0.1:
-            st.warning("Tu ahorro actual es bajo. Reduce gastos variables o ajusta tus metas.")
-        else:
-            st.success(f"Ahorro saludable: {ahorro*100:.1f}%")
-
-        if gastos > ingresos * 0.9:
-            st.write("Tus gastos representan más del 90% de tus ingresos. Considera un presupuesto más estricto.")
-        if flujo > 0:
-            st.write(f"Flujo positivo de ${flujo:,.0f}. Evalúa invertir parte del excedente.")
-
-        if "reducir" in sugerencia.lower() or ahorro < 0.1:
-            st.write("1. Aplica la regla 50/30/20 para distribuir ingresos.")
-            st.write("2. Revisa suscripciones o servicios poco usados.")
-            st.write("3. Usa herramientas de control de gastos.")
-        if "aumentar" in sugerencia.lower():
-            st.write("1. Explora ingresos extra o pasivos.")
-            st.write("2. Negocia aumentos o sube precios gradualmente.")
-        if "invertir" in sugerencia.lower():
-            st.write("1. Considera fondos de bajo riesgo o CETES.")
-            st.write("2. Diversifica inversiones para estabilidad.")
+        # Llamada a Gemini
+        try:
+            respuesta = model.generate_content(prompt)
+            st.success("Respuesta recibida:")
+            st.write(respuesta.text)
+        except Exception as e:
+            st.error(f"Error al consultar Gemini: {e}")
