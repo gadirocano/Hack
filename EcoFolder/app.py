@@ -46,12 +46,25 @@ menu = st.sidebar.radio("Menú principal", ["Dashboard", "Simulador What-If", "A
 if menu == "Dashboard":
     mostrar_dashboard(df, analisis)
 
+# en app.py (fragmento dentro del menú)
 elif menu == "Simulador What-If":
     st.header("Simulación de escenarios financieros")
     inc = st.slider("Variación de ingresos (%)", -50, 100, 0) / 100
     gas = st.slider("Variación de gastos (%)", -50, 50, 0) / 100
     sim = simular_escenario(df, inc, gas)
     mostrar_kpis(sim, titulo="Resultados simulados")
+
+    # Botón para pedir análisis IA
+    if st.button("Analizar con IA"):
+        with st.spinner("Generando análisis con IA..."):
+            from simulator_ai import analizar_simulacion_ai
+            try:
+                texto_ai = analizar_simulacion_ai(df, sim, inc, gas)
+                st.subheader("Análisis y recomendaciones (IA)")
+                st.write(texto_ai)
+            except Exception as e:
+                st.error(f"Error al generar análisis con IA: {e}")
+
 
 elif menu == "Asistente IA":
     asistente_financiero(df, analisis)
