@@ -5,6 +5,7 @@ import pandas as pd
 import plotly.express as px
 import unicodedata
 
+
 def limpiar_texto(texto):
     if not isinstance(texto, str):
         return texto
@@ -12,8 +13,100 @@ def limpiar_texto(texto):
     return texto.strip().lower()
 
 def cargar_datos():
-    st.sidebar.header("📁 Carga de datos")
-    
+    with st.sidebar:
+        # Estilo visual del sidebar
+        st.markdown("""
+        <style>
+            .sidebar-card {
+                background-color: #fff;
+                border-radius: 14px;
+                padding: 5px;
+                box-shadow: 0 3px 6px rgba(0,0,0,0.06);
+                margin-bottom: 18px;
+            }
+            .sidebar-header {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin-bottom: 8px;
+            }
+            .sidebar-header .icon {
+                background: #d71921;
+                color: white;
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 42px;
+                height: 42px;
+                font-size: 22px;
+                font-weight: bold;
+            }
+            .sidebar-header h3 {
+                margin: 0;
+                color: #0E1E40;
+                font-size: 1.05rem;
+                font-weight: 800;
+            }
+            .sidebar-header p {
+                margin: 0;
+                color: #666;
+                font-size: 0.85rem;
+            }
+             div[data-testid="stFileUploader"] > section {
+                border: 2px dashed #e6b8b8 !important;
+                border-radius: 12px !important;
+                background-color: #fff !important;
+                padding: 20px 10px !important;
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                justify-content: center !important;
+                text-align: center !important;
+            }
+            div[data-testid="stFileUploader"] button {
+                background: linear-gradient(90deg, #d71921, #f54747);
+                color: #fff !important;
+                border: none !important;
+                border-radius: 10px !important;
+                padding: 8px 18px !important;
+                font-weight: 600 !important;
+                margin-top: 10px !important;
+                font-size: 0.9rem !important;
+            }
+            div[data-testid="stFileUploader"] button:hover {
+                background: linear-gradient(90deg, #b20f19, #e73d3d);
+            }
+            .checkbox-card {
+                background: #fff5f5;
+                border: 1px solid #f5c2c2;
+                border-radius: 10px;
+                padding: 12px 14px;
+                margin-top: 15px;
+            }
+            .checkbox-card label {
+                font-weight: 600 !important;
+                color: #0E1E40 !important;
+            }
+            .checkbox-card small {
+                display: block;
+                color: #555;
+                font-size: 0.8rem;
+                margin-left: 24px;
+                margin-top: 4px;
+            }
+        </style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+        <div class="sidebar-card">
+            <div class="sidebar-header">
+                <div class="icon"><i class="bi bi-file-earmark-pdf"></i></div>
+                <div>
+                    <h3>Carga de datos</h3>
+                    <p>Sube tu archivo (.xlsx)</p>
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
     # File uploader con key para rastrear cambios
     archivo = st.sidebar.file_uploader("Sube tu archivo (.xlsx)", type=["xlsx"], key="file_uploader")
     usar_ejemplo = st.sidebar.checkbox("Usar datos de ejemplo", key="usar_ejemplo")
