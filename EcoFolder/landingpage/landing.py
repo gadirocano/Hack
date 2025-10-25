@@ -17,6 +17,16 @@ def mostrar_landing():
     # ----- estilos personalizados -----
     st.markdown("""
     <style>
+        /* ---- Ocultar header y ajustar padding ---- */
+    header {visibility: hidden;}
+    [data-testid="stToolbar"] {display: none !important;}
+    [data-testid="stHeader"] {display: none !important;}
+    [data-testid="stDecoration"] {display: none !important;}
+    [data-testid="stStatusWidget"] {display: none !important;}
+    [data-testid="stAppViewContainer"] > .main {
+        padding-top: 0rem;
+        padding-bottom: 0rem;
+    }
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
         * { font-family: 'Inter', sans-serif; }
 
@@ -153,4 +163,4 @@ def mostrar_landing():
             st.session_state.mostrar_app = True
             st.rerun()
 
-    st.markdown("<br><br><p style='text-align:center; color:#CED4DA;'>Desarrollado por <b>Gadiro Cano</b> para HackTec Banorte 2025 💡</p>", unsafe_allow_html=True)
+    st.markdown("<br><br><p style='text-align:center; color:#CED4DA;'>Desarrollado por <b>n</b> para HackTec Banorte 2025 💡</p>", unsafe_allow_html=True)
