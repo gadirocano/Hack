@@ -35,7 +35,7 @@ def asistente_financiero(df, analisis):
             for k, v in analisis.items():
                 prompt += f"{k}: {v}\n"
             prompt += f"\nPregunta del usuario: {pregunta}\n"
-            prompt += "Responde como un asistente financiero claro y con recomendaciones accionables."
+            prompt += "Responde como un asistente financiero claro y con recomendaciones accionables resumido y sin quitar datos importantes."
 
             # Llamada al modelo Gemini
             try:
