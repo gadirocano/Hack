@@ -9,13 +9,19 @@ from utils import cargar_datos, mostrar_kpis, mostrar_dashboard
 st.set_page_config(page_title="FinMind MCP", page_icon="💹", layout="wide")
 st.title("FinMind MCP – Asistente Financiero Inteligente")
 
+# Cargar datos primero
 df = cargar_datos()
+
+# Solo continuar si hay datos válidos
 if df is None:
+    st.info("👆 Sube un archivo Excel o activa la opción de datos de ejemplo para comenzar.")
     st.stop()
 
+# Analizar solo cuando hay datos
 analisis = analizar_finanzas(df)
 mostrar_kpis(analisis)
 
+# Menú principal
 menu = st.sidebar.radio("Menú principal", ["Dashboard", "Simulador What-If", "Asistente IA"])
 
 if menu == "Dashboard":
