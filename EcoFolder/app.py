@@ -7,7 +7,7 @@ from gemini import asistente_financiero
 from utils import cargar_datos, mostrar_kpis, mostrar_dashboard
 
 st.set_page_config(page_title="FinMind MCP", page_icon="💹", layout="wide")
-st.title("FinMind MCP – Asistente Financiero Inteligente")
+st.title("FinMind MCP - Asistente Financiero Inteligente")
 
 # Cargar datos primero
 df = cargar_datos()
