@@ -15,7 +15,7 @@ def limpiar_texto(texto):
 
 def cargar_datos():
     with st.sidebar:
-        # 🎨 Estilo visual del sidebar con corrección para la flecha de Streamlit
+        # Estilo visual del sidebar con corrección para la flecha de Streamlit
         st.markdown("""
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
@@ -125,7 +125,7 @@ def cargar_datos():
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
         <div class="sidebar-card">
             <div class="sidebar-header">
-                <div class="icon"><i class="bi bi-file-earmark-pdf"></i></div>
+                <div class="icon"><i class="bi bi-file-earmark-arrow-up"></i></div>
                 <div>
                     <h3>Carga de datos</h3>
                     <p>Sube tu archivo (.xlsx)</p>
