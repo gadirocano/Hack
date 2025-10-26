@@ -258,6 +258,7 @@ def mostrar_kpis(analisis: dict, titulo="Indicadores financieros"):
                 font-size: 1.3rem;
                 margin-top: 2rem;
                 margin-bottom: 0.3rem;
+                
             }}
             .divider {{
                 border: none;
@@ -277,28 +278,28 @@ def mostrar_kpis(analisis: dict, titulo="Indicadores financieros"):
                 font-size: 0.85rem;
             }}
         </style>
-
+                
         <div class="titulo-kpi">{titulo}</div>
         <hr class="divider">
 
         <div class="kpi-container">
             <div class="kpi-card">
-                <div class="kpi-title">💰 Ingresos</div>
+                <div class="kpi-title"> <i class="bi bi-wallet"></i> Ingresos</div>
                 <div class="kpi-value">${analisis['ingresos']:,.0f}</div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-title">💸 Gastos</div>
+                <div class="kpi-title"><i class="bi bi-cash-stack"></i> Gastos</div>
                 <div class="kpi-value">${analisis['gastos']:,.0f}</div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-title">📊 Flujo</div>
+                <div class="kpi-title"><i class="bi bi-clipboard-data"></i>Flujo</div>
                 <div class="kpi-value">${analisis['flujo']:,.0f}</div>
                 <div class="{ 'positivo' if analisis['flujo'] >= 0 else 'negativo' }">
                     {'↑ Positivo' if analisis['flujo'] >= 0 else '↓ Negativo'}
                 </div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-title">📈 Ahorro (%)</div>
+                <div class="kpi-title"><i class="bi bi-piggy-bank"></i>Ahorro (%)</div>
                 <div class="kpi-value">{analisis['ahorro']*100:.1f}%</div>
             </div>
         </div>
@@ -323,6 +324,7 @@ def mostrar_dashboard(df: pd.DataFrame, analisis: dict):
                 font-size: 1.3rem;
                 margin-top: 2rem;
                 margin-bottom: 0.3rem;
+                
             }
             .divider {
                 border: none;
@@ -332,7 +334,7 @@ def mostrar_dashboard(df: pd.DataFrame, analisis: dict):
                 opacity: 0.9;
             }
         </style>
-        <div class="titulo-dashboard">📊 Dashboard Financiero</div>
+        <div class="titulo-dashboard"><i class="bi bi-bar-chart-line-fill"></i> Dashboard Financiero</div>
         <hr class="divider">
     """, unsafe_allow_html=True)
 
@@ -398,7 +400,7 @@ def mostrar_dashboard(df: pd.DataFrame, analisis: dict):
         with col2:
             st.markdown("""
                 <div style="padding:0.8rem 1rem;">
-                    <h5 style="color:#0E1E40; font-weight:700;">🏆 Top 5 Gastos</h5>
+                    <h5 style="color:#0E1E40; font-weight:700;"><i class="bi bi-trophy"></i> Top 5 Gastos</h5>
             """, unsafe_allow_html=True)
             for cat, monto in gastos_cat.head(5).items():
                 st.markdown(f"<p style='margin:0.3rem 0;'>• <b>{cat.title()}</b>: ${monto:,.0f}</p>", unsafe_allow_html=True)
