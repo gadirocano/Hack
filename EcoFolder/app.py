@@ -194,7 +194,7 @@ mostrar_kpis(analisis)
 # -----------------------------------------------------
 # MENÚ PRINCIPAL
 # -----------------------------------------------------
-menu = st.sidebar.radio("Menú principal", ["Dashboard", "Simulador What-If", "Asistente IA", "Optimizador Inteligente"])
+menu = st.sidebar.radio("Menú principal", ["Dashboard", "Simulador What-If", "Asistente IA", "Optimizador Inteligente", "Salud Financiera 360"])
 
 if menu == "Dashboard":
     mostrar_dashboard(df, analisis)
@@ -224,3 +224,9 @@ elif menu == "Asistente IA":
 
 elif menu == "Optimizador Inteligente":
     smart_optimizer(df)
+
+elif menu == "Salud Financiera 360":
+    from health import indice_salud_financiera, detector_anomalias
+    score, nivel = indice_salud_financiera(df)
+    st.divider()
+    detector_anomalias(df)
