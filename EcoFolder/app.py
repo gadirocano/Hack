@@ -11,6 +11,8 @@ from landingpage.landing import mostrar_landing  # 👈 importar tu landing
 # -----------------------------------------------------
 st.set_page_config(page_title="FinMind MCP", page_icon="💹", layout="wide")
 
+
+
 # -----------------------------------------------------
 # CONTROL DE NAVEGACIÓN ENTRE LANDING Y APP
 # -----------------------------------------------------
@@ -21,7 +23,7 @@ if "mostrar_app" not in st.session_state:
 # MOSTRAR LANDING O APP SEGÚN ESTADO
 # -----------------------------------------------------
 if not st.session_state.mostrar_app:
-    mostrar_landing()  # 👈 Muestra la landing page
+    mostrar_landing()  # Muestra la landing page
     st.stop()          # Detiene ejecución aquí hasta presionar “Comenzar Ahora”
 
 # -----------------------------------------------------
