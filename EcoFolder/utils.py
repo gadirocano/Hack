@@ -15,15 +15,29 @@ def limpiar_texto(texto):
 
 def cargar_datos():
     with st.sidebar:
-        # Estilo visual del sidebar con tipografía Inter
+        # 🎨 Estilo visual del sidebar con corrección para la flecha de Streamlit
         st.markdown("""
         <style>
-                    
-                    
             @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-            * {
+
+            /* Fuente Inter solo en texto */
+            body, p, h1, h2, h3, h4, h5, h6, label, button, input, textarea, .sidebar-card, .checkbox-card {
                 font-family: 'Inter', sans-serif !important;
             }
+
+            /* Restaurar fuente para íconos del sidebar (flecha y Material Icons) */
+            .material-icons,
+            .material-icons-outlined,
+            .material-symbols-outlined,
+            [data-testid="stSidebarCollapseControl"] span {
+                font-family: 'Material Icons Outlined','Material Icons','Material Symbols Outlined' !important;
+                font-weight: normal !important;
+                font-style: normal !important;
+                letter-spacing: normal !important;
+                text-transform: none !important;
+            }
+
+            /* Tarjeta principal */
             .sidebar-card {
                 background-color: #fff;
                 border-radius: 14px;
@@ -60,6 +74,8 @@ def cargar_datos():
                 color: #666;
                 font-size: 0.85rem;
             }
+
+            /* File uploader */
             div[data-testid="stFileUploader"] > section {
                 border: 2px dashed #e6b8b8 !important;
                 border-radius: 12px !important;
@@ -84,6 +100,8 @@ def cargar_datos():
             div[data-testid="stFileUploader"] button:hover {
                 background: linear-gradient(90deg, #b20f19, #e73d3d);
             }
+
+            /* Checkbox card */
             .checkbox-card {
                 background: #fff5f5;
                 border: 1px solid #f5c2c2;
@@ -193,8 +211,13 @@ def mostrar_kpis(analisis: dict, titulo="Indicadores financieros"):
     st.markdown(f"""
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-            * {{
+            body, p, h1, h2, h3, h4, h5, h6, label, button {{
                 font-family: 'Inter', sans-serif !important;
+            }}
+            .material-icons,
+            .material-icons-outlined,
+            .material-symbols-outlined {{
+                font-family: 'Material Icons Outlined','Material Icons','Material Symbols Outlined' !important;
             }}
             .kpi-container {{
                 display: grid;
@@ -286,7 +309,14 @@ def mostrar_dashboard(df: pd.DataFrame, analisis: dict):
     st.markdown("""
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-            * { font-family: 'Inter', sans-serif !important; }
+            body, p, h1, h2, h3, h4, h5, h6, label, button {
+                font-family: 'Inter', sans-serif !important;
+            }
+            .material-icons,
+            .material-icons-outlined,
+            .material-symbols-outlined {
+                font-family: 'Material Icons Outlined','Material Icons','Material Symbols Outlined' !important;
+            }
             .titulo-dashboard {
                 color: #0E1E40;
                 font-weight: 800;
