@@ -196,7 +196,7 @@ mostrar_kpis(analisis)
 # -----------------------------------------------------
 # MENÚ PRINCIPAL
 # -----------------------------------------------------
-menu = st.sidebar.radio("Menú principal", ["Dashboard", "Simulador What-If", "Asistente IA", "Optimizador Inteligente", "Salud Financiera 360"])
+menu = st.sidebar.radio("Menú principal", ["Dashboard", "Simulador What-If", "Asistente IA", "Optimizador Inteligente", "Salud Financiera 360", "CFO Digital"])
 
 if menu == "Dashboard":
     mostrar_dashboard(df, analisis)
@@ -244,3 +244,121 @@ elif menu == "Salud Financiera 360":
     score, nivel = indice_salud_financiera(df)
     st.divider()
     detector_anomalias(df)
+
+elif menu == "CFO Digital":
+    st.header("🤖 CFO Digital — Recomendaciones y Simulaciones Inteligentes")
+    st.markdown("""
+    Este módulo analiza tu historial financiero y genera **recomendaciones de inversión, reinversión y optimización**, 
+    simulando escenarios futuros para ayudarte a tomar decisiones estratégicas basadas en datos.
+    """)
+
+    # --- Parámetros configurables por el usuario ---
+    horizon = st.slider("Horizonte de proyección (meses)", 3, 36, 12)
+    reinv_pct = st.slider("Porcentaje máximo a reinvertir del flujo (%)", 0, 100, 30) / 100
+    risk_profile = st.selectbox("Perfil de riesgo", ["conservador", "moderado", "arriesgado"])
+
+    # --- Botón principal ---
+    if st.button("Generar recomendaciones CFO Digital"):
+        with st.spinner("Analizando y generando informe con IA..."):
+            try:
+                from decision_ai import analizar_empresa_decisiones_text
+                resultado = analizar_empresa_decisiones_text(
+                    df,
+                    horizon_months=horizon,
+                    reinvertir_pct=reinv_pct,
+                    risk_profile=risk_profile
+                )
+
+                # --- Helpers locales para formateo ---
+                def fmt_num(x):
+                    try:
+                        if x is None:
+                            return "—"
+                        return f"{float(x):,.2f}"
+                    except Exception:
+                        return str(x)
+
+                def fmt_pct(x):
+                    try:
+                        if x is None:
+                            return "—"
+                        return f"{float(x)*100:.2f}%"
+                    except Exception:
+                        return str(x)
+
+                # --- Mostrar resumen numérico (formato amigable) ---
+                st.subheader("📊 Resumen financiero (KPIs)")
+                k = resultado.get("summary", {})
+                col_html = f"""
+                        **Meses registrados:** {', '.join(k.get('meses', [])[:12]) + (' ...' if len(k.get('meses', []))>12 else '')}
+
+                        - **Total ingresos:** {fmt_num(k.get('total_ingresos'))}
+                        - **Total gastos:** {fmt_num(k.get('total_gastos'))}
+                        - **Flujo total:** {fmt_num(k.get('flujo_total'))}
+                        - **Margen promedio:** {fmt_pct(k.get('margen_promedio'))}
+                        - **CAGR ingresos (aprox):** {fmt_pct(k.get('cagr_ingresos'))}
+                        - **Deuda total:** {fmt_num(k.get('deuda_total'))}
+                        - **Caja total:** {fmt_num(k.get('caja_total'))}
+                        - **Ratio deuda/flujo:** {fmt_num(k.get('deuda_ratio'))}
+                        - **Liquidez sencilla (caja/gastos):** {fmt_num(k.get('liquidez_simple'))}
+                        """
+                st.markdown(col_html)
+
+                # --- Mostrar proyección simple (lista legible) ---
+                st.subheader("📈 Proyección simple del flujo (primeros meses)")
+                ps = resultado.get("proyeccion_simple", {}).get("monthly", [])
+                if not ps:
+                    st.write("No hay proyección disponible.")
+                else:
+                    # mostrar como lista vertical con índice (Mes 1, Mes 2...)
+                    for i, val in enumerate(ps[:36]):  # limitar a 36 meses si existen
+                        st.write(f"Mes {i+1}: **{fmt_num(val)}**")
+
+                # --- Mostrar resultados Monte Carlo (p10/p50/p90) ---
+                st.subheader("🎲 Simulación Monte Carlo — percentiles")
+                mc = resultado.get("monte_carlo", {})
+                percentiles = mc.get("percentiles", None)
+                if percentiles and isinstance(percentiles, (list, tuple)) and len(percentiles) >= 3:
+                    st.markdown(f"- **p10 (adverso):** {fmt_num(percentiles[0])}")
+                    st.markdown(f"- **p50 (mediana):** {fmt_num(percentiles[1])}")
+                    st.markdown(f"- **p90 (optimista):** {fmt_num(percentiles[2])}")
+                    # opcional: mostrar mu/std si existen
+                    if "mc_mu" in mc:
+                        st.markdown(f"- **MC media final (mu):** {fmt_num(mc.get('mc_mu'))} (std: {fmt_num(mc.get('mc_std'))})")
+                else:
+                    st.write("No hay resultados de Monte Carlo disponibles o la simulación no retornó percentiles válidos.")
+
+                # ---------- INICIO: Sección que muestra el texto generado por la IA (vertical, sin scroll) ----------
+                st.subheader("🧠 Informe generado por la IA — CFO Digital")
+
+                # Texto crudo devuelto por la IA
+                texto_ai = resultado.get("gemini_text", "")
+                if not texto_ai:
+                    st.info("La IA no devolvió texto. Intenta generar nuevamente.")
+                else:
+                    # Normalizar separadores y garantizar saltos de línea
+                    texto_ai = texto_ai.replace("-------", "\n---\n").strip()
+
+                    # Mostrar en bloque vertical con wrapping (sin scroll horizontal)
+                    # usamos markdown normal (no JSON ni codeblock gigante) para mayor legibilidad
+                    # además forzamos saltos de línea y justificado con pre-wrap via code block
+                    st.markdown(f"{texto_ai}")
+
+                # ---------- Pequeña sección explicativa (resumen muy breve de campos) ----------
+                st.markdown("### ¿Qué significa cada campo? (resumen rápido)")
+                st.markdown(
+                    """
+                    - **KPIs (Resumen financiero):** totales históricos (ingresos, gastos, flujo), márgenes y ratios básicos.
+                    - **Proyección simple:** estimación usando crecimiento promedio mensual aplicado al último valor del flujo.
+                    - **Monte Carlo (p10/p50/p90):** percentiles de una simulación estocástica que modela variaciones históricas; p10 = escenario adverso, p50 = mediana, p90 = escenario optimista.
+                    - **Informe IA (Resumen/Insights/Recomendaciones):** texto humano con acciones sugeridas, prioridad y riesgos.
+                    """
+                )
+
+                # Nota opcional de confianza/uso
+                st.caption("Nota: las recomendaciones de la IA son orientativas. Verifica supuestos y considera validarlas con tu equipo financiero.")
+                # ---------- FIN: Sección IA ----------
+
+            except Exception as e:
+                st.error(f"⚠️ Error al generar recomendaciones: {e}")
+
